@@ -53,7 +53,7 @@ const tourSchema = new mongoose.Schema({
     priceDiscount: {
         type: Number,
         validate: {
-            validator: function(val) {
+            validator: function (val) {
                 // this only points to current doc on NEW document creation not in update scenario
                 return val < this.price;
             },
@@ -80,10 +80,41 @@ const tourSchema = new mongoose.Schema({
         select: false
     },
     startDates: [Date],
-    secretTour:{
+    secretTour: {
         type: Boolean,
         default: false
-    }
+    },
+    startLocation: {
+        // GeoJSON Type
+        type: {
+            type: String,
+            default: 'Point',
+            enum: ['Point']
+        },
+        coordinates: [Number],
+        address: String,
+        description: String,
+    },
+    locations: [
+        {
+            type: {
+                type: String,
+                default: 'Point',
+                enum: ['Point']
+            },
+            coordinates: [Number],
+            address: String,
+            description: String,
+            day: Number
+        }
+    ],
+    // guides: Array -- embedded way
+    guides: [
+        {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: 'User'
+        }
+    ]
 }, {
     toJSON: {
         virtuals: true
@@ -96,11 +127,26 @@ tourSchema.virtual('durationWeek').get(function () {
     return this.duration / 7;
 });
 
+// Virtual population setup
+tourSchema.virtual('reviews', {
+    ref: 'Review',     // Reference to the Review model
+    foreignField: 'tour',  // Field in the Review model that references the Tour
+    localField: '_id'      // Field in the Tour model used for matching
+});
+
 // DOCUMENT MIDDLEWARE: it runs before .save(), .create() mongoose methods but not .insertMany() for example
 tourSchema.pre('save', function (next) { // the first argument here 'save' called the pre save *hook/middleware of the mongoose document.
     this.slug = slugify(this.name, {lower: true});
     next();
 });
+
+// tourSchema.pre('save', async function (next) {
+//     const guidesPromises = this.guides.map(async (user_id) => await User.findById(user_id));
+//     this.guides = await Promise.all(guidesPromises);
+//     next();
+// }); The embedded way of modeling sub documents
+
+
 // tourSchema.pre('save', function (doc, next) {
 //     console.log(doc);
 //     next();
@@ -112,6 +158,16 @@ tourSchema.pre(/^find/, function (next) { // It means all queries that start wit
     this.start = Date.now();
     next();
 });
+
+tourSchema.pre(/^find/, function (next) {
+    this.populate({
+        path: 'guides',
+        select: '-__v -passwordChangedAt'
+    });
+    next();
+})
+
+
 // tourSchema.post(/^find/, function (docs, next) { // It means all queries that start with "find" => find, findOne, findBy---- etc
 //     console.log(`Query took ${Date.now()} - ${this.start} milliseconds`);
 //     console.log(docs);

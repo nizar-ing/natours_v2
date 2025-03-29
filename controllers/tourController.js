@@ -130,7 +130,7 @@ const getAllTours = catchAsync(async (req, res, next) => {
 });
 
 const getTourById = catchAsync(async (req, res, next) => {
-    const tour = await Tour.findById(req.params.id); // <=> Tour.findOne({_id: req.params.id})
+    const tour = await Tour.findById(req.params.id).populate('reviews'); // <=> Tour.findOne({_id: req.params.id})
     if(!tour){
         // we should use return here in order to finish this current middleware immediately. We cannot have 2 responses in a single pipeline cycle.
         return next(new AppError(`No Tour found with this ID: ${req.params.id}`, 404));
