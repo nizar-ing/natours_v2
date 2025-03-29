@@ -2,6 +2,7 @@ const Tour = require("../models/tourModel");
 const APIFeatures = require("../utils/APIFeatures");
 const catchAsync = require("../error-handlers/catchAsync");
 const AppError = require("../utils/appError");
+const {deleteOne} = require("./handlerFactory");
 
 /*const checkId = (req, res, next, val) => {
     console.log(`Tour Id is: ${val}`);
@@ -187,18 +188,19 @@ const updateTourById = catchAsync(async (req, res, next) => {
     );
 });
 
-const deleteTourById = catchAsync(async (req, res, next) => {
-    const tour = await Tour.findByIdAndDelete(req.params.id);
-    if(!tour){
-        return next(new AppError(`No Tour found with this ID: ${req.params.id}`, 404));
-    }
-    res.status(204).json(
-        {
-            status: 'success',
-            data: null
-        }
-    );
-});
+// const deleteTourById = catchAsync(async (req, res, next) => {
+//     const tour = await Tour.findByIdAndDelete(req.params.id);
+//     if(!tour){
+//         return next(new AppError(`No Tour found with this ID: ${req.params.id}`, 404));
+//     }
+//     res.status(204).json(
+//         {
+//             status: 'success',
+//             data: null
+//         }
+//     );
+// });
+const deleteTourById = deleteOne(Tour); // the previous application logic will be delegated to this deleteOne handler from our handler factory
 
 const getTourStats = catchAsync(async (req, res, next) => {
         const stats = await Tour.aggregate([
