@@ -1,8 +1,8 @@
 const Tour = require("../models/tourModel");
-const APIFeatures = require("../utils/APIFeatures");
+//const APIFeatures = require("../utils/APIFeatures");
 const catchAsync = require("../error-handlers/catchAsync");
-const AppError = require("../utils/appError");
-const {deleteOne, updateOne, createOne} = require("./handlerFactory");
+//const AppError = require("../utils/appError");
+const {deleteOne, updateOne, createOne, getOne, getAll} = require("./handlerFactory");
 
 /*const checkId = (req, res, next, val) => {
     console.log(`Tour Id is: ${val}`);
@@ -112,37 +112,39 @@ const aliasTopTours = (req, res, next) => {
     // }
 //};
 
-const getAllTours = catchAsync(async (req, res, next) => {
-    // EXECUTE THE QUERY
-    const apiFeatures = new APIFeatures(Tour.find(), req.query)
-        .filter()
-        .sorting()
-        .fieldsSelecting()
-        .paginate();
+// const getAllTours = catchAsync(async (req, res, next) => {
+//     // EXECUTE THE QUERY
+//     const apiFeatures = new APIFeatures(Tour.find(), req.query)
+//         .filter()
+//         .sorting()
+//         .fieldsSelecting()
+//         .paginate();
+//
+//     const tours = await apiFeatures.query; // then and at the end of the day we have to execute the final query.
+//     res.status(200).json(
+//         {
+//             status: 'success',
+//             results: tours.length,
+//             data: {tours}
+//         }
+//     );
+// });
+const getAllTours = getAll(Tour);
 
-    const tours = await apiFeatures.query; // then and at the end of the day we have to execute the final query.
-    res.status(200).json(
-        {
-            status: 'success',
-            results: tours.length,
-            data: {tours}
-        }
-    );
-});
-
-const getTourById = catchAsync(async (req, res, next) => {
-    const tour = await Tour.findById(req.params.id).populate('reviews'); // <=> Tour.findOne({_id: req.params.id})
-    if(!tour){
-        // we should use return here in order to finish this current middleware immediately. We cannot have 2 responses in a single pipeline cycle.
-        return next(new AppError(`No Tour found with this ID: ${req.params.id}`, 404));
-    }
-    res.status(200).json(
-        {
-            status: 'success',
-            data: {tour}
-        }
-    );
-});
+// const getTourById = catchAsync(async (req, res, next) => {
+//     const tour = await Tour.findById(req.params.id).populate('reviews'); // <=> Tour.findOne({_id: req.params.id})
+//     if(!tour){
+//         // we should use return here in order to finish this current middleware immediately. We cannot have 2 responses in a single pipeline cycle.
+//         return next(new AppError(`No Tour found with this ID: ${req.params.id}`, 404));
+//     }
+//     res.status(200).json(
+//         {
+//             status: 'success',
+//             data: {tour}
+//         }
+//     );
+// });
+const getTourById = getOne(Tour, {path: 'reviews'});
 
 /*const createNewTour = async (req, res) => {
     try {
