@@ -11,6 +11,10 @@ const filterObj = (obj, ...allowedFields) => {
     return newObj;
 };
 
+const getMe = (req, res, next) => {
+    req.params.id = req.user.id;
+    next();
+};
 const updateMe = catchAsync(async (req, res, next) => {
     // 1) create error if user POSTs a password data
     const {password, passwordConfirm} = req.body;
@@ -51,7 +55,7 @@ const deleteMe = catchAsync(async (req, res, next) => {
 //     });
 // });
 const getAllUsers = getAll(User);
-const getUserById = (req, res) => getOne(User);
+const getUserById = getOne(User);
 const createNewUser = (req, res) => {
     res.status(500).json({
         status: 'Error',
@@ -78,4 +82,4 @@ const updateUserById = updateOne(User);
 // };
 const deleteUserById = deleteOne(User);
 
-module.exports = {getAllUsers, createNewUser, deleteUserById, getUserById, updateUserById, updateMe, deleteMe};
+module.exports = {getAllUsers, createNewUser, deleteUserById, getUserById, updateUserById, getMe, updateMe, deleteMe};
