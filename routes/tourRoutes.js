@@ -31,15 +31,15 @@ tourRouter.route('/tour-stats')
     .get(getTourStats);
 
 tourRouter.route('/monthly-plan/:year')
-    .get(getMonthlyPlan);
+    .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
 
 tourRouter.route('/')
-    .get(protect, getAllTours)
-    .post(createNewTour);
+    .get(getAllTours)
+    .post(protect, restrictTo('admin', 'lead-guide'), createNewTour);
 
 tourRouter.route('/:id')
     .get(getTourById)
-    .patch(updateTourById)
+    .patch(protect, restrictTo('admin', 'lead-guide'), updateTourById)
     .delete(protect, restrictTo('admin', 'lead-guide'), deleteTourById);
 
 
