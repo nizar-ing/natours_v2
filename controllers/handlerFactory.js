@@ -30,6 +30,7 @@ const getAll = (Model) => catchAsync(async (req, res, next) => {
         .fieldsSelecting()
         .paginate();
 
+    //const docs = await apiFeatures.query.explain() for performance optimization by using indexes until just the development process not in production.
     const docs = await apiFeatures.query; // then and at the end of the day we have to execute the final query.
     res.status(200).json(
         {
