@@ -3,6 +3,7 @@ const Tour = require("../models/tourModel");
 const catchAsync = require("../error-handlers/catchAsync");
 //const AppError = require("../utils/appError");
 const {deleteOne, updateOne, createOne, getOne, getAll} = require("./handlerFactory");
+const AppError = require("../utils/appError");
 
 /*const checkId = (req, res, next, val) => {
     console.log(`Tour Id is: ${val}`);
@@ -35,81 +36,81 @@ const aliasTopTours = (req, res, next) => {
 };
 
 //const getAllTours = async (req, res) => {
-    //try {
-        // BUILD THE QUERY
-        // 1-A FILTERING
-        // let queryObj = { ...req.query };
-        // const excludedFields = ['page', 'sort', 'limit', 'fields'];
-        // excludedFields.forEach(el => delete queryObj[el]);
-        // const query = Tour.find({
-        //     duration: 5,
-        //     difficulty: 'easy'
-        // });
+//try {
+// BUILD THE QUERY
+// 1-A FILTERING
+// let queryObj = { ...req.query };
+// const excludedFields = ['page', 'sort', 'limit', 'fields'];
+// excludedFields.forEach(el => delete queryObj[el]);
+// const query = Tour.find({
+//     duration: 5,
+//     difficulty: 'easy'
+// });
 
-        // 1-B) Advanced FILTERING
-        // let queryStr = JSON.stringify(queryObj);
-        // queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (matchWord) => `$${matchWord}`);
-        // queryObj = JSON.parse(queryStr);
+// 1-B) Advanced FILTERING
+// let queryStr = JSON.stringify(queryObj);
+// queryStr = queryStr.replace(/\b(gte|gt|lte|lt)\b/g, (matchWord) => `$${matchWord}`);
+// queryObj = JSON.parse(queryStr);
 
-        // since the req.query = {duration: 5, difficulty: 'easy'} have the same shape as the first filter method.
-        // const tours = await Tour.find(queryObj); with await here the returned query is going to be executed. for that: let's proceed as below
-        // let query = Tour.find(queryObj); // we gonna retrieve only a query. we are going chain all the necessary chain queries
+// since the req.query = {duration: 5, difficulty: 'easy'} have the same shape as the first filter method.
+// const tours = await Tour.find(queryObj); with await here the returned query is going to be executed. for that: let's proceed as below
+// let query = Tour.find(queryObj); // we gonna retrieve only a query. we are going chain all the necessary chain queries
 
-          // const tours = await Tour.find()
-          //   .where('duration').equals(5)
-          //   .where('difficulty').equals('easy');
+// const tours = await Tour.find()
+//   .where('duration').equals(5)
+//   .where('difficulty').equals('easy');
 
-        // 2) SORTING
-        // const {sort} = req.query;
-        // if(sort) {
-        //     const sortBy = sort.split(',').join(' ');
-        //     query = query.sort(sortBy); // sort(price ratingsAverage)
-        // }else{
-        //     query = query.sort('-createdAt');
-        // }
-        //
+// 2) SORTING
+// const {sort} = req.query;
+// if(sort) {
+//     const sortBy = sort.split(',').join(' ');
+//     query = query.sort(sortBy); // sort(price ratingsAverage)
+// }else{
+//     query = query.sort('-createdAt');
+// }
+//
 
-        // 3) Field LIMITING
-        // let {fields} = req.query;
-        // if(fields){
-        //     fields = fields.split(',').join(' ');
-        //     query = query.select(fields);
-        // }else{
-        //     query = query.select('-__v');
-        // }
+// 3) Field LIMITING
+// let {fields} = req.query;
+// if(fields){
+//     fields = fields.split(',').join(' ');
+//     query = query.select(fields);
+// }else{
+//     query = query.select('-__v');
+// }
 
-        // 4) PAGINATION   page=3&limit=10 => 1->10: page1 ; 11->20: page2 ; 21->30: page3 query = query.skip((page-1)*limit).limit(10)
-        // const page = req.query.page * 1 || 1;
-        // const limit = req.query.limit * 1 || 10;
-        // const skip = (page - 1) * limit;
-        //
-        // query = query.skip(skip).limit(limit);
-        // if(req.query.page){
-        //     const nbTours = await Tour.countDocuments();
-        //     if((skip >= nbTours) || (req.query.page * 1 <= 0)) throw new Error("This page doesn't exist!");
-        // }*/
+// 4) PAGINATION   page=3&limit=10 => 1->10: page1 ; 11->20: page2 ; 21->30: page3 query = query.skip((page-1)*limit).limit(10)
+// const page = req.query.page * 1 || 1;
+// const limit = req.query.limit * 1 || 10;
+// const skip = (page - 1) * limit;
+//
+// query = query.skip(skip).limit(limit);
+// if(req.query.page){
+//     const nbTours = await Tour.countDocuments();
+//     if((skip >= nbTours) || (req.query.page * 1 <= 0)) throw new Error("This page doesn't exist!");
+// }*/
 
-        // EXECUTE THE QUERY
-    //     const apiFeatures = new APIFeatures(Tour.find(), req.query)
-    //         .filter()
-    //         .sorting()
-    //         .fieldsSelecting()
-    //         .paginate();
-    //
-    //     const tours = await apiFeatures.query; // then and at the end of the day we have to execute the final query.
-    //     res.status(200).json(
-    //         {
-    //             status: 'success',
-    //             results: tours.length,
-    //             data: {tours}
-    //         }
-    //     );
-    // } catch (error) {
-    //     res.status(500).json({
-    //         status: 'Fail',
-    //         message: error.message
-    //     })
-    // }
+// EXECUTE THE QUERY
+//     const apiFeatures = new APIFeatures(Tour.find(), req.query)
+//         .filter()
+//         .sorting()
+//         .fieldsSelecting()
+//         .paginate();
+//
+//     const tours = await apiFeatures.query; // then and at the end of the day we have to execute the final query.
+//     res.status(200).json(
+//         {
+//             status: 'success',
+//             results: tours.length,
+//             data: {tours}
+//         }
+//     );
+// } catch (error) {
+//     res.status(500).json({
+//         status: 'Fail',
+//         message: error.message
+//     })
+// }
 //};
 
 // const getAllTours = catchAsync(async (req, res, next) => {
@@ -193,79 +194,95 @@ const updateTourById = updateOne(Tour);
 const deleteTourById = deleteOne(Tour); // the previous application logic will be delegated to this deleteOne handler from our handler factory
 
 const getTourStats = catchAsync(async (req, res, next) => {
-        const stats = await Tour.aggregate([
-            {
-                $match: {ratingsAverage: {$gte: 4.5}}
-            },
-            {
-                $group: {
-                    // _id: '$difficulty',
-                    _id: {$toUpper: '$difficulty'},
-                    nbTours: {$sum: 1},
-                    nbRatings: {$sum: '$ratingsQuantity'},
-                    avgRating: {$avg: '$ratingsAverage'},
-                    avgPrice: {$avg: '$price'},
-                    minPrice: {$min: '$price'},
-                    maxPrice: {$max: '$price'},
-                }
-            },
-            {
-                $sort: {avgPrice: -1}
-            },
-            // {
-            //     $match: {_id: {$ne: 'EASY'}}
-            // }
-        ]);
-        res.status(200).json(
-            {
-                status: 'success',
-                data: {stats}
+    const stats = await Tour.aggregate([
+        {
+            $match: {ratingsAverage: {$gte: 4.5}}
+        },
+        {
+            $group: {
+                // _id: '$difficulty',
+                _id: {$toUpper: '$difficulty'},
+                nbTours: {$sum: 1},
+                nbRatings: {$sum: '$ratingsQuantity'},
+                avgRating: {$avg: '$ratingsAverage'},
+                avgPrice: {$avg: '$price'},
+                minPrice: {$min: '$price'},
+                maxPrice: {$max: '$price'},
             }
-        );
+        },
+        {
+            $sort: {avgPrice: -1}
+        },
+        // {
+        //     $match: {_id: {$ne: 'EASY'}}
+        // }
+    ]);
+    res.status(200).json(
+        {
+            status: 'success',
+            data: {stats}
+        }
+    );
 })
 
 const getMonthlyPlan = catchAsync(async (req, res, next) => {
-        const year = +req.params.year;
-        const plan = await Tour.aggregate([
-            {
-                $unwind: '$startDates'
-            },
-            {
-                $match: {
-                    startDates: {
-                        $gte: new Date(`${year}-01-01`),
-                        $lte: new Date(`${year}-12-31`)
-                    }
+    const year = +req.params.year;
+    const plan = await Tour.aggregate([
+        {
+            $unwind: '$startDates'
+        },
+        {
+            $match: {
+                startDates: {
+                    $gte: new Date(`${year}-01-01`),
+                    $lte: new Date(`${year}-12-31`)
                 }
-            },
-            {
-                $group: {
-                    _id: {$month: '$startDates'},
-                    nbToursStart: {$sum: 1},
-                    tours: {$push: '$name'}
-                }
-            },
-            {
-                $addFields: {month: '$_id'},
-            },
-            {
-                $project: {_id: 0}
-            },
-            {
-                $sort: {nbToursStart: -1}
-            },
-            // {
-            //     $limit: 1
-            // }
-        ]);
-
-        res.status(200).json(
-            {
-                status: 'success',
-                data: {plan}
             }
-        );
-})
+        },
+        {
+            $group: {
+                _id: {$month: '$startDates'},
+                nbToursStart: {$sum: 1},
+                tours: {$push: '$name'}
+            }
+        },
+        {
+            $addFields: {month: '$_id'},
+        },
+        {
+            $project: {_id: 0}
+        },
+        {
+            $sort: {nbToursStart: -1}
+        },
+        // {
+        //     $limit: 1
+        // }
+    ]);
+
+    res.status(200).json(
+        {
+            status: 'success',
+            data: {plan}
+        }
+    );
+});
+
+// /tours-within/:distance/center/:latlng/unit/:unit'
+// /tours-within/245/center/:34.052065, -118.242285/unit/mi'
+const getToursWithin = catchAsync(async (req, res, next) => {
+    const {distance, latlng, unit} = req.params;
+    const [lat, lng] = latlng.split(',');
+    const radius = unit === 'mi' ? (distance / 3963.2) : (distance / 6378.1);
+    if (!lat || !lng) new AppError('Please provide the latitude and longitude in this format lat,lng.', 400);
+    const tours = await Tour.find({startLocation: {$geoWithin: {$centerSphere: [[lng, lat], radius]}}});
+
+    res.status(200).json({
+        status: 'success',
+        results: tours.length,
+        data: {tours}
+    });
+});
 
 module.exports = {
     getAllTours,
@@ -275,5 +292,6 @@ module.exports = {
     deleteTourById,
     aliasTopTours,
     getTourStats,
-    getMonthlyPlan
+    getMonthlyPlan,
+    getToursWithin
 };

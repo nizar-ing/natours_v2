@@ -7,7 +7,8 @@ const {
     updateTourById,
     aliasTopTours,
     getTourStats,
-    getMonthlyPlan
+    getMonthlyPlan,
+    getToursWithin
 } = require("../controllers/tourController");
 const {protect, restrictTo} = require("../controllers/authController");
 const reviewRouter = require("./reviewRoutes");
@@ -33,6 +34,7 @@ tourRouter.route('/tour-stats')
 tourRouter.route('/monthly-plan/:year')
     .get(protect, restrictTo('admin', 'lead-guide', 'guide'), getMonthlyPlan);
 
+tourRouter.route('/tours-within/:distance/center/:latlng/unit/:unit').get(getToursWithin);
 tourRouter.route('/')
     .get(getAllTours)
     .post(protect, restrictTo('admin', 'lead-guide'), createNewTour);

@@ -6,7 +6,8 @@
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon server.js",
     "start:prod": "SET NODE_ENV=production&&nodemon server.js",
-    "debug": "SET NODE_ENV=production&&node --inspect server.js"
+    "//": "debug: SET NODE_ENV=production&&node --inspect server.js",
+    "debug": "ndb server.js"
   },
   "keywords": [],
   "author": "Nizar ILAHI",
@@ -23,6 +24,7 @@
     "jsonwebtoken": "^9.0.2",
     "mongoose": "^5.13.22",
     "morgan": "^1.10.0",
+    "ndb": "^1.1.5",
     "nodemailer": "^6.9.16",
     "slugify": "^1.6.6",
     "validator": "^13.12.0",
